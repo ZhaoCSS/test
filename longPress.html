@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            -webkit-touch-callout:none;
+            -webkit-user-select:none;
+            -khtml-user-select:none;
+            -moz-user-select:none;
+            -ms-user-select:none;
+            user-select:none;
+        }
+        html,body,.box{
+            width: 100%;
+            height: 100%;
+        }
+        .box {
+            position: relative;
+        }
+        .content {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            bottom: 3em;
+            background: #e9e9e9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 3em;
+            background: #fff;
+        }
+        .btnPress {
+            box-sizing: border-box;
+            margin: 6px;
+            width: calc(100% - 12px);
+            height: calc(3em - 12px);
+        }
+        .content,.btnPress {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e9e9e9;
+            color: #fff;
+        }
+        .red {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="content"></div>
+        <div class="btn">
+            <div class="btnPress">按住录音</div>
+        </div>
+    </div>
+    <script>
+        var btn = document.querySelector('.btn');
+        var btnPress = document.querySelector('.btnPress');
+        var content = document.querySelector('.content');
+        var time = null;
+        btnPress.addEventListener('touchstart', function(event) {
+            var event = event || window.event;
+            time = setTimeout(function() {
+                content.innerHTML = "开始录音";
+                //记录btn的位置
+                var btnTop = btn.offsetTop;
+                document.body.addEventListener('touchmove',function(ev) {
+                    var ev = ev || window.event;
+                    var moveTop = ev.changedTouches[0].pageY;
+                    if(moveTop < btnTop) {
+                        //离开了
+                        content.classList.add('red');
+                    }else {
+                        // 未离开
+                        content.classList.remove('red');
+                    };
+                    ev.preventDefault();
+                })
+            }, 300);
+            event.preventDefault();
+        });
+        document.body.addEventListener('touchend', function() {
+            clearTimeout(time);
+            content.classList.remove('red');
+            content.innerHTML = ""; 
+        });
+    </script>
+</body>
+</html>
